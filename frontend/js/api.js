@@ -143,12 +143,57 @@ const API = {
     },
 
     async getThresholds() {
-        return this.request('/admin/thresholds');
+        return this.request('/admin/risk-threshold');
     },
 
-    async updateThresholds(low, high) {
-        return this.request(`/admin/thresholds?low=${low}&high=${high}`, {
-            method: 'POST',
+    async updateThresholds(fraud_threshold, avg_fraud_loss = null) {
+        let url = `/admin/risk-threshold?fraud_threshold=${fraud_threshold}`;
+        if (avg_fraud_loss) {
+            url += `&avg_fraud_loss=${avg_fraud_loss}`;
+        }
+        return this.request(url, {
+            method: 'PUT',
         });
     },
+
+    async getBusinessImpact() {
+        return this.request('/admin/business-impact');
+    },
+
+    async getFraudNetwork() {
+        return this.request('/admin/fraud-network');
+    },
+
+    async getTimeline() {
+        return this.request('/admin/timeline');
+    },
+
+    async getMlMetrics() {
+        return this.request('/admin/ml-metrics');
+    },
+
+    async downloadReport(claimId) {
+        const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+        // Better way to download: fetch and create blob URL so we can pass Bearer token in headers
+        const response = await fetch(`${CONFIG.API_BASE}/claims/${claimId}/report`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error("Failed to download report");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Claim_${claimId}_Report.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    },
+
+    async labelClaim(claimId, label) {
+        return this.request(`/claims/${claimId}/label?label=${label}`, {
+            method: 'POST',
+        });
+    }
 };

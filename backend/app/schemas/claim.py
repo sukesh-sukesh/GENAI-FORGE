@@ -45,7 +45,7 @@ class RiskAssessment(BaseModel):
     fraud_probability: float = Field(..., ge=0, le=1)
     risk_score: float = Field(..., ge=0, le=100)
     risk_category: str
-    fraud_factors: List[Dict[str, Any]] = []
+    fraud_factors: Optional[Dict[str, Any]] = None
     shap_values: Optional[Dict[str, Any]] = None
 
 
@@ -63,7 +63,7 @@ class ClaimResponse(BaseModel):
     fraud_probability: Optional[float] = None
     risk_score: Optional[float] = None
     risk_category: Optional[str] = None
-    fraud_factors: Optional[List[Dict[str, Any]]] = None
+    fraud_factors: Optional[Dict[str, Any]] = None
     shap_values: Optional[Dict[str, Any]] = None
     document_verification_status: Optional[str] = None
     document_verification_details: Optional[Dict[str, Any]] = None

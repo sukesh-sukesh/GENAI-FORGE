@@ -1,0 +1,136 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   backend/app/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/__pycache__/config.cpython-313.pyc
+	modified:   backend/app/__pycache__/database.cpython-313.pyc
+	modified:   backend/app/__pycache__/main.cpython-313.pyc
+	modified:   backend/app/database.py
+	modified:   backend/app/document_verification/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/document_verification/__pycache__/validator.cpython-313.pyc
+	modified:   backend/app/fraud_intelligence/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/fraud_intelligence/__pycache__/entity_detection.cpython-313.pyc
+	modified:   backend/app/fraud_intelligence/__pycache__/network_detection.cpython-313.pyc
+	modified:   backend/app/fraud_intelligence/__pycache__/pattern_alerts.cpython-313.pyc
+	modified:   backend/app/main.py
+	modified:   backend/app/middleware/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/middleware/__pycache__/auth_middleware.cpython-313.pyc
+	modified:   backend/app/ml/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/ml/__pycache__/feature_engineering.cpython-313.pyc
+	modified:   backend/app/ml/__pycache__/model_training.cpython-313.pyc
+	modified:   backend/app/ml/__pycache__/risk_scoring.cpython-313.pyc
+	modified:   backend/app/ml/model_training.py
+	modified:   backend/app/ml/risk_scoring.py
+	modified:   backend/app/models/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/models/__pycache__/audit.cpython-313.pyc
+	modified:   backend/app/models/__pycache__/claim.cpython-313.pyc
+	modified:   backend/app/models/__pycache__/document.cpython-313.pyc
+	modified:   backend/app/models/__pycache__/user.cpython-313.pyc
+	modified:   backend/app/models/claim.py
+	modified:   backend/app/routes/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/routes/__pycache__/admin.cpython-313.pyc
+	modified:   backend/app/routes/__pycache__/auth.cpython-313.pyc
+	modified:   backend/app/routes/__pycache__/claims.cpython-313.pyc
+	modified:   backend/app/routes/__pycache__/documents.cpython-313.pyc
+	modified:   backend/app/routes/admin.py
+	modified:   backend/app/routes/claims.py
+	modified:   backend/app/schemas/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/schemas/__pycache__/claim.cpython-313.pyc
+	modified:   backend/app/schemas/__pycache__/document.cpython-313.pyc
+	modified:   backend/app/schemas/__pycache__/user.cpython-313.pyc
+	modified:   backend/app/services/__pycache__/__init__.cpython-313.pyc
+	modified:   backend/app/services/__pycache__/auth_service.cpython-313.pyc
+	modified:   backend/app/services/__pycache__/claim_service.cpython-313.pyc
+	modified:   backend/app/services/__pycache__/document_service.cpython-313.pyc
+	modified:   backend/insureguard.db
+	modified:   frontend/index.html
+	modified:   frontend/js/admin.js
+	modified:   frontend/js/api.js
+	modified:   frontend/js/app.js
+	modified:   frontend/js/components.js
+	modified:   frontend/js/dashboard.js
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	backend/app/models/__pycache__/fraud_alert.cpython-313.pyc
+	backend/app/models/__pycache__/system_config.cpython-313.pyc
+	backend/app/models/fraud_alert.py
+	backend/app/models/system_config.py
+	backend/run_server.py
+	diff_stat.txt
+	diff_status.txt
+	get_git.py
+	git_updates.txt
+	git_utf8.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+--- DIFF STAT ---
+
+ backend/app/__pycache__/__init__.cpython-313.pyc   | Bin 144 -> 144 bytes
+ backend/app/__pycache__/config.cpython-313.pyc     | Bin 2228 -> 2228 bytes
+ backend/app/__pycache__/database.cpython-313.pyc   | Bin 1446 -> 1494 bytes
+ backend/app/__pycache__/main.cpython-313.pyc       | Bin 11882 -> 12284 bytes
+ backend/app/database.py                            |   2 +-
+ .../__pycache__/__init__.cpython-313.pyc           | Bin 166 -> 166 bytes
+ .../__pycache__/validator.cpython-313.pyc          | Bin 8435 -> 8435 bytes
+ .../__pycache__/__init__.cpython-313.pyc           | Bin 163 -> 163 bytes
+ .../__pycache__/entity_detection.cpython-313.pyc   | Bin 4420 -> 4420 bytes
+ .../__pycache__/network_detection.cpython-313.pyc  | Bin 5804 -> 5804 bytes
+ .../__pycache__/pattern_alerts.cpython-313.pyc     | Bin 7246 -> 7246 bytes
+ backend/app/main.py                                |   7 +
+ .../__pycache__/__init__.cpython-313.pyc           | Bin 155 -> 155 bytes
+ .../__pycache__/auth_middleware.cpython-313.pyc    | Bin 5015 -> 5015 bytes
+ .../app/ml/__pycache__/__init__.cpython-313.pyc    | Bin 147 -> 147 bytes
+ .../feature_engineering.cpython-313.pyc            | Bin 8107 -> 8107 bytes
+ .../ml/__pycache__/model_training.cpython-313.pyc  | Bin 13711 -> 14040 bytes
+ .../ml/__pycache__/risk_scoring.cpython-313.pyc    | Bin 6438 -> 6975 bytes
+ backend/app/ml/model_training.py                   |   7 +
+ backend/app/ml/risk_scoring.py                     |  37 +-
+ .../models/__pycache__/__init__.cpython-313.pyc    | Bin 433 -> 433 bytes
+ .../app/models/__pycache__/audit.cpython-313.pyc   | Bin 1735 -> 1735 bytes
+ .../app/models/__pycache__/claim.cpython-313.pyc   | Bin 6567 -> 6767 bytes
+ .../models/__pycache__/document.cpython-313.pyc    | Bin 2342 -> 2342 bytes
+ .../app/models/__pycache__/user.cpython-313.pyc    | Bin 2631 -> 2631 bytes
+ backend/app/models/claim.py                        |   6 +
+ .../routes/__pycache__/__init__.cpython-313.pyc    | Bin 151 -> 151 bytes
+ .../app/routes/__pycache__/admin.cpython-313.pyc   | Bin 5531 -> 10394 bytes
+ .../app/routes/__pycache__/auth.cpython-313.pyc    | Bin 1796 -> 1796 bytes
+ .../app/routes/__pycache__/claims.cpython-313.pyc  | Bin 7056 -> 14241 bytes
+ .../routes/__pycache__/documents.cpython-313.pyc   | Bin 2189 -> 2189 bytes
+ backend/app/routes/admin.py                        | 132 +++++-
+ backend/app/routes/claims.py                       | 135 ++++++-
+ .../schemas/__pycache__/__init__.cpython-313.pyc   | Bin 540 -> 540 bytes
+ .../app/schemas/__pycache__/claim.cpython-313.pyc  | Bin 5921 -> 5921 bytes
+ .../schemas/__pycache__/document.cpython-313.pyc   | Bin 1979 -> 1979 bytes
+ .../app/schemas/__pycache__/user.cpython-313.pyc   | Bin 2234 -> 2234 bytes
+ .../services/__pycache__/__init__.cpython-313.pyc  | Bin 153 -> 153 bytes
+ .../__pycache__/auth_service.cpython-313.pyc       | Bin 3580 -> 3580 bytes
+ .../__pycache__/claim_service.cpython-313.pyc      | Bin 13074 -> 13074 bytes
+ .../__pycache__/document_service.cpython-313.pyc   | Bin 6512 -> 6512 bytes
+ backend/insureguard.db                             | Bin 131072 -> 147456 bytes
+ frontend/index.html                                |  74 +++-
+ frontend/js/admin.js                               | 343 +++++++++++-----
+ frontend/js/api.js                                 |  39 +-
+ frontend/js/app.js                                 |   8 +
+ frontend/js/components.js                          | 172 ++++----
+ frontend/js/dashboard.js                           | 446 +++++++++++----------
+ 48 files changed, 947 insertions(+), 461 deletions(-)
+
+
+--- UNTRACKED FILES ---
+
+backend/app/models/__pycache__/fraud_alert.cpython-313.pyc
+backend/app/models/__pycache__/system_config.cpython-313.pyc
+backend/app/models/fraud_alert.py
+backend/app/models/system_config.py
+backend/run_server.py
+diff_stat.txt
+diff_status.txt
+get_git.py
+git_updates.txt
+git_utf8.txt

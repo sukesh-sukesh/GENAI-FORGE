@@ -85,6 +85,13 @@ def _seed_default_users():
             db.commit()
             print(f"[OK] Created {len(users)} default users")
 
+            from app.models.system_config import SystemConfig
+            if db.query(SystemConfig).count() == 0:
+                config = SystemConfig(fraud_threshold=0.70, avg_fraud_loss=50000.0)
+                db.add(config)
+                db.commit()
+                print("[OK] Seeded default system config")
+
             # Seed some demo claims
             _seed_demo_claims(db)
     finally:

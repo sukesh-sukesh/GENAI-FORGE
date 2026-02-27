@@ -87,6 +87,12 @@ class Claim(Base):
     document_verification_status = Column(String(50), default="pending")
     document_verification_details = Column(JSON, nullable=True)
 
+    # Additional Risk Data
+    reviewer_label = Column(String(50), nullable=True) # genuine, fraud
+    reviewed_at = Column(DateTime, nullable=True)
+    reviewed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    anomaly_score = Column(Float, nullable=True)  # 0-1
+
     # Metadata
     additional_data = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

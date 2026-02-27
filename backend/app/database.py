@@ -30,5 +30,5 @@ def get_db():
 
 def init_db():
     """Initialize database tables."""
-    from app.models import user, claim, document, audit  # noqa: F401
+    from app.models import user, claim, document, audit, system_config, fraud_alert  # noqa: F401
     Base.metadata.create_all(bind=engine)

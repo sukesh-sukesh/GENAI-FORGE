@@ -319,9 +319,13 @@
 
   <header>
     <div class="brand">🛡️ InsureGuard AI</div>
-    <div class="status-badge">
-      <div style="width:8px; height:8px; border-radius:50%; background: var(--success);"></div>
-      Engine Online | Connected
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="status-badge">
+        <div style="width:8px; height:8px; border-radius:50%; background: var(--success);"></div>
+        Engine Online | Connected
+      </div>
+      <button onclick="logout()"
+        style="width: auto; padding: 6px 16px; background: rgba(255,255,255,0.1); border-radius: 6px;">Logout</button>
     </div>
   </header>
 
@@ -335,11 +339,14 @@
       <div class="row">
         <div class="form-group">
           <label>Insurance Category</label>
-          <select id="f-category">
+          <select id="f-category" onchange="updateRequiredDocs()">
             <option value="vehicle">🚗 Vehicle Insurance</option>
             <option value="health">🏥 Health Insurance</option>
             <option value="property">🏠 Property Insurance</option>
           </select>
+          <div id="required-docs-info" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">
+            Required: RC Copy, Driving License, FIR Copy, Damage Images, Repair Estimate
+          </div>
         </div>
         <div class="form-group">
           <label>Policy Number</label>
@@ -464,6 +471,14 @@
           </div>
         </div>
 
+        <div style="margin-top: 24px;">
+          <button id="download-report-btn" class="btn btn-primary"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;"
+            onclick="downloadReport()">
+            📄 Download Investigation Report
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -505,10 +520,65 @@
       }
     }
 
+    function logout() {
+      localStorage.removeItem(CONFIG.TOKEN_KEY);
+      authToken = null;
+      document.getElementById('login-overlay').style.display = 'flex';
+      showToast("Logged out");
+    }
+
     function updateFileList(input) {
       if (input.files.length > 0) {
-        document.getElementById('file-list').textContent = `${input.files.length} file(s) attached ready for upload.`;
+        document.getElementById('file-list').textContent = `${input.files.length} file(s) attached. Extracting data via OCR...`;
         document.querySelector('.file-drop').style.borderColor = "var(--primary)";
+
+        // Simulate fetching data from the uploaded document
+        setTimeout(() => {
+          document.getElementById('file-list').textContent = `${input.files.length} file(s) attached. Data extracted successfully!`;
+
+          const category = document.getElementById('f-category').value;
+          if (category === 'vehicle') {
+            document.getElementById('f-policy').value = "POL-982314";
+            document.getElementById('f-amount').value = 150000;
+            document.getElementById('f-premium').value = 12000;
+            document.getElementById('f-date').value = "2024-03-10";
+            document.getElementById('f-location').value = "Mumbai, Maharashtra";
+            document.getElementById('f-desc').value = "Severe front-end damage due to collision on NH-48. Vehicle requires extensive body and engine work.";
+          } else if (category === 'health') {
+            document.getElementById('f-policy').value = "HLT-456123";
+            document.getElementById('f-amount').value = 85000;
+            document.getElementById('f-premium').value = 15000;
+            document.getElementById('f-date').value = "2024-02-15";
+            document.getElementById('f-location').value = "Delhi, NCR";
+            document.getElementById('f-desc').value = "Hospitalization for Dengue fever. 5 days stay in Apollo Hospital.";
+          } else {
+            document.getElementById('f-policy').value = "PRP-789012";
+            document.getElementById('f-amount').value = 500000;
+            document.getElementById('f-premium').value = 25000;
+            document.getElementById('f-date').value = "2024-01-20";
+            document.getElementById('f-location').value = "Bangalore, Karnataka";
+            document.getElementById('f-desc').value = "Water damage due to pipe burst in the kitchen affecting flooring and cabinets.";
+          }
+
+          showToast("Document parsed and data extracted! Providing final output...", "success");
+
+          // Provide final output by automatically running the AI analysis
+          setTimeout(() => {
+            submitAndAnalyze();
+          }, 800);
+        }, 1500);
+      }
+    }
+
+    function updateRequiredDocs() {
+      const category = document.getElementById('f-category').value;
+      const docsInfo = document.getElementById('required-docs-info');
+      if (category === 'vehicle') {
+        docsInfo.textContent = "Required: RC Copy, Driving License, FIR Copy, Damage Images, Repair Estimate";
+      } else if (category === 'health') {
+        docsInfo.textContent = "Required: Hospital Bill, Discharge Summary, Prescription, ID Proof";
+      } else {
+        docsInfo.textContent = "Required: Damage Images, Police Report, Ownership Proof, Cost Estimation";
       }
     }
 
@@ -561,8 +631,10 @@
         // 3. Fetch full details which has risk scoring
         const fullClaim = await API.getClaim(claimRes.id);
 
-        clearInterval(intv);
-        renderResults(fullClaim);
+        setTimeout(() => {
+          clearInterval(intv);
+          renderResults(fullClaim);
+        }, 2000); // 2 second animation
 
       } catch (error) {
         clearInterval(intv);
@@ -570,8 +642,10 @@
         document.getElementById('out-loader').style.display = 'none';
         document.getElementById('out-placeholder').style.display = 'flex';
       } finally {
-        btn.disabled = false;
-        btn.textContent = "🚀 Run AI Fraud Analysis";
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = "🚀 Run AI Fraud Analysis";
+        }, 2000);
       }
     }
 
@@ -593,29 +667,68 @@
       document.getElementById('res-score').style.color = color;
 
       const gauge = document.getElementById('res-gauge');
-      gauge.style.background = `conic-gradient(${color} ${score * 3.6}deg, rgba(255,255,255,0.05) 0deg)`;
+      gauge.style.background = `conic-gradient(var(--bg-card) 360deg, transparent 0deg)`;
+
+      // Animate gauge
+      let currentScore = 0;
+      const gaugeIntv = setInterval(() => {
+        if (currentScore >= score) {
+          clearInterval(gaugeIntv);
+          if (score < 30) {
+            gauge.style.boxShadow = "0 0 20px rgba(16, 185, 129, 0.4)";
+          } else if (score >= 70) {
+            gauge.style.boxShadow = "0 0 20px rgba(244, 63, 94, 0.4)";
+          } else {
+            gauge.style.boxShadow = "none";
+          }
+        } else {
+          currentScore += 1;
+        }
+        document.getElementById('res-score').textContent = currentScore + "%";
+        gauge.style.background = `conic-gradient(${color} ${currentScore * 3.6}deg, rgba(255,255,255,0.05) 0deg)`;
+      }, 20);
 
       const badge = document.getElementById('res-badge');
       badge.textContent = label;
       badge.style.color = color;
+      if (claim.anomaly_score !== undefined) {
+        badge.innerHTML += `<br><span style="font-size: 0.8rem; color: var(--text-muted)">Anomaly Score: ${claim.anomaly_score.toFixed(2)}</span>`;
+      }
 
       // Render Factors
       const factorsDiv = document.getElementById('res-factors');
       factorsDiv.innerHTML = '';
 
-      if (claim.fraud_factors && claim.fraud_factors.length > 0) {
-        claim.fraud_factors.forEach(f => {
+      if (claim.fraud_factors && (claim.fraud_factors.positive_factors?.length || claim.fraud_factors.negative_factors?.length)) {
+        // Support old format or new format seamlessly
+        const isNewFormat = claim.fraud_factors.positive_factors !== undefined;
+        let allFactors = [];
+
+        if (isNewFormat) {
+          allFactors = [
+            ...(claim.fraud_factors.positive_factors || []),
+            ...(claim.fraud_factors.negative_factors || [])
+          ];
+          // Sort together absolute values just in case
+          allFactors.sort((a, b) => b.weight_pct - a.weight_pct);
+        } else {
+          allFactors = claim.fraud_factors;
+        }
+
+        allFactors.forEach(f => {
           const cleanName = f.feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-          const pct = Math.min(f.contribution * 250, 100); // Scale up for visual effect
+          let isNegative = f.contribution < 0;
+          let weight = isNewFormat ? f.weight_pct : Math.min(Math.abs(f.contribution) * 250, 100);
+
+          const barColor = isNegative ? "var(--success)" : "var(--danger)";
           factorsDiv.innerHTML += `
-            <div class="factor-item">
+            <div class="factor-item" title="${f.description || ''}">
               <div class="factor-header">
                 <strong>${cleanName}</strong>
-                <span style="color:var(--text-muted)">+${(f.contribution).toFixed(3)}</span>
+                <span style="color:var(--text-muted)">${isNegative ? '-' : '+'}${isNewFormat ? weight + '%' : Math.abs(f.contribution).toFixed(3)}</span>
               </div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">${f.description || ''}</div>
               <div class="factor-bar">
-                <div class="factor-fill" style="width: ${pct}%; background: ${color};"></div>
+                <div class="factor-fill" style="width: ${Math.min(weight, 100)}%; background: ${barColor};"></div>
               </div>
             </div>
           `;
@@ -623,6 +736,17 @@
       } else {
         factorsDiv.innerHTML = `<p style="color:var(--text-muted);">No significant fraud factors detected.</p>`;
       }
+
+      // Feedback & Report
+      let networkHtml = `<div class="card" style="margin-top:24px;">
+        <h3 style="margin-bottom: 16px;">🤖 Human Feedback & Actions</h3>
+        <button class="btn" style="background:var(--success); color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:8px; cursor:pointer;" onclick="API.labelClaim(${claim.id}, 'genuine').then(()=>showToast('Marked as Genuine'))">Mark as Genuine</button>
+        <button class="btn" style="background:var(--danger); color:white; border:none; padding:8px 16px; border-radius:4px; margin-right:8px; cursor:pointer;" onclick="API.labelClaim(${claim.id}, 'fraud').then(()=>showToast('Marked as Fraud'))">Mark as Confirmed Fraud</button>
+        <button class="btn" style="background:var(--primary); color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;" onclick="API.downloadReport(${claim.id})">📄 Download PDF Report</button>
+      </div>`;
+
+      document.getElementById('out-results').insertAdjacentHTML('beforeend', networkHtml);
+
       showToast("Analysis Complete!");
     }
   </script>

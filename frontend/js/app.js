@@ -59,6 +59,14 @@ const App = {
                 Manager.renderFraudIntelligence();
                 break;
 
+            case 'ml-insights':
+                Admin.renderMlInsights();
+                break;
+
+            case 'fraud-network':
+                Admin.renderFraudNetwork();
+                break;
+
             case 'high-risk':
                 Manager.renderHighRiskClaims();
                 break;

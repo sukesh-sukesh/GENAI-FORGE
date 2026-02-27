@@ -195,10 +195,25 @@ def train_and_compare_models(X: pd.DataFrame = None, y: pd.Series = None) -> Dic
 
         # Optimal threshold
         opt_threshold = compute_optimal_threshold(y_test.values, y_proba)
-
+        
         # Cross-validation score
-        cv_scores = cross_val_score(model, X_train_resampled, y_train_resampled,
-                                     cv=5, scoring="roc_auc")
+        cv_scores = cross_val_score(model, X_train_resampled, y_train_resampled, cv=5, scoring="roc_auc")
+
+        # PR Curve
+        precisions, recalls, _ = precision_recall_curve(y_test, y_proba)
+        
+        # Format PR Curve data for frontend (keep 20 points for visualization)
+        n_points = 20
+        idx = np.linspace(0, len(precisions) - 1, n_points, dtype=int)
+        
+        pr_curve = {
+            "precision": precisions[idx].tolist(),
+            "recall": recalls[idx].tolist()
+        }
+
+        # Confusion Matrix
+        y_pred_opt = (y_proba >= opt_threshold).astype(int)
+        cm = confusion_matrix(y_test, y_pred_opt).tolist()
 
         results[name] = {
             "roc_auc": round(auc, 4),
@@ -207,7 +222,9 @@ def train_and_compare_models(X: pd.DataFrame = None, y: pd.Series = None) -> Dic
             "precision": round(precision, 4),
             "optimal_threshold": opt_threshold,
             "cv_auc_mean": round(cv_scores.mean(), 4),
-            "cv_auc_std": round(cv_scores.std(), 4)
+            "cv_auc_std": round(cv_scores.std(), 4),
+            "confusion_matrix": cm,
+            "pr_curve": pr_curve
         }
 
         print(f"  AUC: {auc:.4f}, F1: {f1:.4f}, Recall: {recall:.4f}")
@@ -248,6 +265,13 @@ def train_and_compare_models(X: pd.DataFrame = None, y: pd.Series = None) -> Dic
 
     with open(metadata_path, "w") as f:
         json.dump(metadata, f, indent=2)
+
+    # Train Isolation Forest for Anomaly Score
+    from sklearn.ensemble import IsolationForest
+    print("Training Isolation Forest...")
+    iso_forest = IsolationForest(contamination=0.15, random_state=42)
+    iso_forest.fit(X_train_resampled)
+    joblib.dump(iso_forest, ML_MODELS_DIR / "isolation_forest.joblib")
 
     print(f"\n[BEST] Best model: {best_model_name} (AUC: {best_auc:.4f})")
     print(f"   Saved to: {model_path}")
