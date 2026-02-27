@@ -7,7 +7,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
 ![ML](https://img.shields.io/badge/ML-XGBoost%20|%20RandomForest-orange)
-![License](https://img.shields.io/badge/License-MIT-purple)
+
 
 ---
 
@@ -218,7 +218,4 @@ Full Swagger docs: http://localhost:8000/api/docs
 
 ---
 
-## 📜 License
 
-This project is for educational and demonstration purposes.
-Built as a showcase of AI-powered insurance fraud detection for the Indian market.
