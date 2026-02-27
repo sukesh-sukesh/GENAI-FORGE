@@ -17,7 +17,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import (roc_auc_score, precision_recall_curve, f1_score,
                               recall_score, precision_score, classification_report,
-                              confusion_matrix)
+                              confusion_matrix, accuracy_score)
 from sklearn.utils.class_weight import compute_class_weight
 
 try:
@@ -188,10 +188,12 @@ def train_and_compare_models(X: pd.DataFrame = None, y: pd.Series = None) -> Dic
         y_proba = model.predict_proba(X_test_scaled)[:, 1]
 
         # Metrics
+        y_pred = (y_proba >= 0.5).astype(int) # Standard threshold for these metrics
         auc = roc_auc_score(y_test, y_proba)
         f1 = f1_score(y_test, y_pred)
         recall = recall_score(y_test, y_pred)
         precision = precision_score(y_test, y_pred)
+        accuracy = accuracy_score(y_test, y_pred)
 
         # Optimal threshold
         opt_threshold = compute_optimal_threshold(y_test.values, y_proba)
@@ -216,6 +218,7 @@ def train_and_compare_models(X: pd.DataFrame = None, y: pd.Series = None) -> Dic
         cm = confusion_matrix(y_test, y_pred_opt).tolist()
 
         results[name] = {
+            "accuracy": round(accuracy, 4),
             "roc_auc": round(auc, 4),
             "f1_score": round(f1, 4),
             "recall": round(recall, 4),

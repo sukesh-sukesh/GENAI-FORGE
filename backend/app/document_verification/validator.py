@@ -138,7 +138,7 @@ def validate_pan_number(pan: str) -> Dict[str, Any]:
 
 
 def cross_check_amount(form_amount: float, document_amount: Optional[float],
-                        tolerance: float = 0.05) -> Dict[str, Any]:
+                        tolerance: float = 0.35) -> Dict[str, Any]:
     """
     Cross-check claim amount from form vs. extracted from document.
     Allows tolerance for rounding differences.

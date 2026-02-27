@@ -11,3 +11,4 @@ class SystemConfig(Base):
     id = Column(Integer, primary_key=True, index=True)
     fraud_threshold = Column(Float, default=0.70)
     avg_fraud_loss = Column(Float, default=50000.0)
+    

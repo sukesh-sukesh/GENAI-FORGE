@@ -70,12 +70,15 @@ def predict_fraud_risk(
     risk_score = round(fraud_probability * 100, 1)
 
     # Risk category based on adaptive threshold
-    if fraud_probability >= fraud_threshold:
+    if fraud_probability >= 0.7:
         risk_category = "high"
-    elif fraud_probability >= fraud_threshold * 0.5:
+        risk_level = "High"
+    elif fraud_probability >= 0.4:
         risk_category = "medium"
+        risk_level = "Medium"
     else:
         risk_category = "low"
+        risk_level = "Low"
 
     # Top contributing factors
     fraud_factors = compute_top_factors(features, metadata)
@@ -87,6 +90,8 @@ def predict_fraud_risk(
         iso_pred = iso_forest.predict(feature_scaled)[0]
         anomaly_score = float((1 - iso_pred) / 2) # 0.0 = normal, 1.0 = anomaly
 
+    key_risk_factors = [f["description"] for f in fraud_factors.get("positive_factors", [])]
+
     return {
         "fraud_probability": round(fraud_probability, 4),
         "risk_score": risk_score,
@@ -94,7 +99,10 @@ def predict_fraud_risk(
         "fraud_factors": fraud_factors,
         "optimal_threshold": optimal_threshold,
         "features_used": features,
-        "anomaly_score": anomaly_score
+        "anomaly_score": anomaly_score,
+        "risk_level": risk_level,
+        "confidence_score": risk_score,
+        "key_risk_factors": key_risk_factors
     }
 
 

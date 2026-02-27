@@ -230,10 +230,14 @@ def predict_claim_risk(
     claim.risk_score = risk_result["risk_score"]
     claim.risk_category = risk_result["risk_category"]
     claim.fraud_factors = risk_result["fraud_factors"]
-    claim.anomaly_score = risk_result.get("anomaly_score")
     db.commit()
 
-    return risk_result
+    return {
+        "fraud_probability": risk_result["fraud_probability"],
+        "risk_level": risk_result["risk_level"],
+        "confidence_score": risk_result["confidence_score"],
+        "key_risk_factors": risk_result["key_risk_factors"]
+    }
 
 
 @router.post("/{claim_id}/label")
